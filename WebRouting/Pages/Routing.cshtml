@@ -8,82 +8,89 @@
     var endpoints = EndpointsDataSource.Endpoints.ToList();
 }
 
-    <h2>
-        Total endpoints = @endpoints.Count
-    </h2>
+<h2>
+    Total endpoints = @endpoints.Count
+</h2>
 
 <table class="table">
-        <tr>
-            <th>Route Pattern,  Order</th>
-            <th>Metadata</th>
-        </tr>
+    <tr>
+        <th>Route Pattern,  Order</th>
+        <th>Metadata</th>
+    </tr>
     <tbody>
         @foreach (var endpoint in endpoints)
         {
             var routeEndpoint = endpoint as RouteEndpoint;
-        <tr>
+            <tr>
 
 
-            <td>
-               <b>Route pattern: </b> @routeEndpoint?.RoutePattern.RawText
-                        <br />
-                        <b>Order</b>: @routeEndpoint?.Order
-                    </td>
-            <td>
-                <ul>
-                    @foreach (var md in endpoint.Metadata)
-                    {
-                        switch (md)
+                <td>
+                    <b>Route pattern: </b> @routeEndpoint?.RoutePattern.RawText
+                    <br />
+                    <b>Order</b>: @routeEndpoint?.Order
+                </td>
+                <td>
+                    <ul>
+                        @foreach (var md in endpoint.Metadata)
                         {
-                            case PageRouteMetadata pageRtMetadata:
-                                <li>
-                                    <p>@nameof(PageRouteMetadata)</p>
-                                    <ul>
-                                        <li>Page Route: @pageRtMetadata.PageRoute</li>
-                                        @{
-                                            // Review: RouteTemplate always null
-                                            if (pageRtMetadata.RouteTemplate != null)
-                                            {
-                                                <li>Route Template: @pageRtMetadata.RouteTemplate</li>
-                                            }
+                            switch (md)
+                            {
+
+                                case PageActionDescriptor pageActnDesc:
+                                    <li>
+                                        <p>@nameof(PageActionDescriptor)</p>
+                                        <ul>
+                                            <li>Display Name: @pageActnDesc.DisplayName</li>
+
+                                            <li>Area: @pageActnDesc.AreaName</li>
+                                            <li>Relative Path: @pageActnDesc.RelativePath</li>
+                                        </ul>
+                                    </li>
+                                    break;
+
+                                case PageRouteMetadata pageRtMetadata:
+                                    <li>
+                                        <p>@nameof(PageRouteMetadata)</p>
+                                        <ul>
+                                            <li>Page Route: @pageRtMetadata.PageRoute</li>
+                                           
+                                                @*Review: RouteTemplate always null*@
+                                                if (pageRtMetadata.RouteTemplate != null)
+                                                {
+                                                    <li>Route Template: @pageRtMetadata.RouteTemplate</li>
+                                                }                                            
+                                        </ul>
+                                    </li>
+                                    break;
+
+                                case RouteNameMetadata routeNameMetadata:
+
+                                   
+                                        // Only default shows up
+                                        if (routeNameMetadata.RouteName !=null)
+                                        {
+                                            <li>Route Name Metadata: @routeNameMetadata.RouteName </li>
                                         }
-                                    </ul>
-                                </li>
-                                break;
-                            case PageActionDescriptor pageActnDesc:
-                                <li>
-                                    <p>@nameof(PageActionDescriptor)</p>
-                                    <ul>
-                                        <li>Display Name: @pageActnDesc.DisplayName</li>
+                                    
+                                    break;
 
-                                        <li>Area: @pageActnDesc.AreaName</li>
-                                        <li>Relative Path: @pageActnDesc.RelativePath</li>
-                                    </ul>
-                                </li>
-                                break;
-                            case RouteNameMetadata routeNameMetadata:
-                                <li>
-                                    Route Name Metadata: @routeNameMetadata.RouteName
-                                </li>
-                                break;
-                            case SuppressLinkGenerationMetadata supressLinkGen:
-                                <li>
-                                    Suppress link bool: @supressLinkGen.SuppressLinkGeneration
-                                </li>
-                                break;
+                                case SuppressLinkGenerationMetadata supressLinkGen:
+                                    <li>
+                                        Suppress link bool: @supressLinkGen.SuppressLinkGeneration
+                                    </li>
+                                    break;
 
-
-                            default:
-                                <li>
-                                    @md.GetType().Name
-                                </li>
-                                break;
+                                default:
+                                    <li>
+                                        @md.GetType().Name
+                                    </li>
+                                    break;
+                            }
                         }
-                    }
-                </ul>
+                    </ul>
 
-            </td>
-        </tr>
+                </td>
+            </tr>
         }
     </tbody>
 </table>
